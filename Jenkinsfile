@@ -3,6 +3,7 @@ node() {
         stage('Checkout') {
                 cleanWs()
                 checkout scm
+                echo sh(script: 'env|sort', returnStdout: true)
                 commit_hash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                 env.commit_id = sh(script: 'echo ' + 'esamwad-backend' + '_' + commit_hash + '_' + env.BUILD_NUMBER, returnStdout: true).trim()
                 echo "${env.commit_id}"
@@ -10,7 +11,8 @@ node() {
 
         stage('docker-build') {
                 sh '''
-                   docker build -t $docker_server/$docker_repo:$commit_id app/
+
+                   docker build -f Dockerfile -t $docker_server/$docker_repo:$commit_id
                    '''
         }
 
