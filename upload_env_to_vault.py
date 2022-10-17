@@ -10,7 +10,7 @@ vault_path = sys.argv[2]
 
 
 # If vault path does not exists make a one
-# This rewrites all the key-value pairs if a vault path exists
+# This rewrites all the key-value pairs for a vault path 
 os.system(f'vault kv put -mount=kv {vault_path} TEST_ENV=TEST_ENV')
 
 with open(env_file, 'r') as f:  
@@ -25,6 +25,9 @@ with open(env_file, 'r') as f:
             os.system(command)
             
 
+print()
+print("# FOR ENV TEMPLATES")
+
 with open(env_file, 'r') as f:  
     lines = f.readlines()
     for l in lines:
@@ -34,3 +37,17 @@ with open(env_file, 'r') as f:
             print(l)
         else:
             print(f'{key}={{{{ credentials.{key} }}}}')
+            
+print()
+print("# FOR VARS/MAIN")
+            
+with open(env_file, 'r') as f:  
+    lines = f.readlines()
+    for l in lines:
+        try:
+            key, value = l.split('=')
+        except ValueError:
+            print(l)
+        else:
+            print(f'{key}:"{{{{ credentials.{key} }}}}"')
+            
