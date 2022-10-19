@@ -17,12 +17,10 @@ node() {
     ])
 
     stage('Vault') {
-        steps {
           withVault([configuration: configuration, vaultSecrets: secrets]) {
             sh "echo ${env.PRIVATE_TOKEN}"
             sh "echo ${env.PUBLIC_TOKEN}"
             sh "echo ${env.API_KEY}"
-          }
         }  
       }
 
