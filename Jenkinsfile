@@ -22,6 +22,7 @@ node() {
             sh "ls"
             sh "echo ${env.PRIVATE_TOKEN} >> some.pem"
             sh "ls"
+            sh "cat some.pem"
             sh "echo ${env.PUBLIC_TOKEN}"
             sh "echo ${env.API_KEY}"
         }  
