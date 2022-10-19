@@ -36,12 +36,21 @@ node() {
             echo "${env.commit_id}"
     }
 
+
+    stage('Remove PEM file') {
+            sh "rm some.pem"
+      }
+
+
+
     stage('docker-build') {
             sh '''
                 # docker build -f <location-of-docker-file> -t <tag-of-docker-image> <context-for-docker-image>
                 docker build -f build/Dockerfile -t $docker_server/$docker_repo:$commit_id .
                 '''
     }
+
+
 
     stage('docker-push') {
         sh '''
