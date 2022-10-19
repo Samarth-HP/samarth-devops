@@ -1,11 +1,31 @@
 node() {
+
+    def secrets = [
+        [path: 'kv/jenkins/github', engineVersion: 2, secretValues: [
+        [envVar: 'PRIVATE_TOKEN', vaultKey: 'private-token'],
+        [envVar: 'PUBLIC_TOKEN', vaultKey: 'public-token'],
+        [envVar: 'API_KEY', vaultKey: 'api-key']]],
+    ]
+
+    def configuration = [vaultUrl: 'http://128.199.26.225:8200',  vaultCredentialId: 'vault-approle', engineVersion: 2]
+
     properties([
         parameters([
             string(name: 'docker_repo', defaultValue: 'YOUR-SERVICE-NAME', description: 'Docker Image Name'),
             string(name: 'docker_server', defaultValue: 'localhost:5000', description: 'Docker Registry URL'),
-
         ])
     ])
+
+    stage('Vault') {
+        steps {
+          withVault([configuration: configuration, vaultSecrets: secrets]) {
+            sh "echo ${env.PRIVATE_TOKEN}"
+            sh "echo ${env.PUBLIC_TOKEN}"
+            sh "echo ${env.API_KEY}"
+          }
+        }  
+      }
+
     stage('Checkout') {
             cleanWs()
             checkout scm
